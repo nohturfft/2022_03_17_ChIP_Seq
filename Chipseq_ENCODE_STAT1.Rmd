@@ -86,6 +86,8 @@ Files in working directory:\
 ```{=html}
 <pre>`r list.files()`</pre>
 ```
+
+
 ## Read and prepare ChIP-seq peak data from ENCODE
 
 The dataset from ENCODE that we'll use for this tutorial is a "summary track" that contains the ChIP-seq peak data compiled from many experiments, using a large number of antibodies and cell lines. This summary track was designed to display ChIP-seq peaks in the UCSC Genome Browser, but is also an excellent resource for data mining.\
@@ -426,3 +428,31 @@ Best website: <https://maayanlab.cloud/Enrichr/>
 
 R package for enrichr analyses:\
 [enrichR: An R interface to the Enrichr database](https://CRAN.R-project.org/package=enrichR)
+
+
+## Session info  
+```{r SESSION INFO DATE, results="asis"}
+cat("Date:", format(Sys.time(), "%a %d-%b-%Y %H:%M:%S"), "<br>\n")
+```
+
+```{r SESSION-INFO-PLATFORM}
+si <- sessioninfo::session_info()
+si.platform.df <- data.frame(
+  setting = names(si$platform),
+  value   = unlist(si$platform),
+  stringsAsFactors = FALSE,
+  row.names = NULL
+)
+knitr::kable(si.platform.df) %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped"))
+```
+
+```{r SESSION-INFO-PACKAGES}
+si$packages %>% 
+  as.data.frame() %>% 
+  dplyr::select(package, version=loadedversion, date, source) %>% 
+  DT::datatable(options = list(columnDefs = list(list(className = 'dt-left', targets = 0:3))),
+              rownames = FALSE,
+              class="stripe")
+rm(si, si.platform.df)
+```
